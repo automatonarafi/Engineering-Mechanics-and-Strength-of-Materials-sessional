@@ -1,39 +1,49 @@
-% Data
-specimens = {'Aluminium', 'Nylon', 'Aerylie'}; % Specimen names
-area_under_notch = [9.734, 91.4112, 80.29]; % Area under the notch (mm²)
-notch_impact_strength = [0.457, 0.0164, 0.006]; % Notch impact strength (Nm/mm²)
+% ------------------------
+% 1) DATA & SETUP
+% ------------------------
+specimens           = {'Aluminium','Nylon','Acrylic'};
+areaUnderNotch = [79.734, 91.4112, 80.229];
+notchImpactStrength = [0.457, 0.0164, 0.006];
 
-% Create grouped data
-data = [area_under_notch; notch_impact_strength]';
+% For plotting bars, define x-positions for each specimen
+x = 1:3;
 
-% Create a figure
-figure;
+figure('Name','Dual-Y-Axis Bar Chart','NumberTitle','off');
 
-% Create a 3D grouped bar chart
-bar_handle = bar3(data);
+% ------------------------
+% 2) BAR FOR AREA (LEFT Y-AXIS)
+% ------------------------
+yyaxis left
+b1 = bar(x - 0.2, areaUnderNotch, 0.4, ...
+         'FaceColor',[0.2 0.6 0.8], 'EdgeColor','none');
+hold on;
+ylabel('Area Under the Notch (mm^2)','FontWeight','bold');
 
-% Customizing bar colors
-bar_handle(1).FaceColor = [0 0.447 0.741];  % Blue for Area Under The Notch
-bar_handle(2).FaceColor = [0.85 0.325 0.098]; % Red for Notch Impact Strength
-
-% Labels and Title
-xlabel('Types of Specimen', 'FontWeight', 'bold');
-ylabel('Metrics', 'FontWeight', 'bold');
-zlabel('Value', 'FontWeight', 'bold');
-title('Comparison of Notch Impact Strength and Area Under The Notch', 'FontWeight', 'bold');
-
-% Adjust X-axis labels
-xticks(1:length(specimens));
+% Label specimens on x-axis
+xticks(x);
 xticklabels(specimens);
-yticks([1, 2]);
-yticklabels({'Area Under The Notch (mm²)', 'Notch Impact Strength (Nm/mm²)'});
+xlabel('Type of Specimen','FontWeight','bold');
 
-% Adjusting View
-grid on;
-view([-30, 30]); % Adjust angle to match your image
+% Adjust y-limits so bars fit nicely
+ylim([0, 90]);  % Just above 91.4112 for clarity
 
-% Add a legend
-legend({'Area Under The Notch (mm²)', 'Notch Impact Strength (Nm/mm²)'}, 'Location', 'NorthEast');
+% ------------------------
+% 3) BAR FOR IMPACT (RIGHT Y-AXIS)
+% ------------------------
+yyaxis right
+b2 = bar(x + 0.2, notchImpactStrength, 0.4, ...
+         'FaceColor',[0.8 0.4 0.4], 'EdgeColor','none');
+ylabel('Notch Impact Strength (Nm/mm^2)','FontWeight','bold');
 
-% Improve Readability
-set(gca, 'FontSize',6);
+% Adjust y-limits so the tallest bar (0.375) is visible
+ylim([0, 0.4]);
+
+% Ensure the x-limits accommodate the bar shifts
+xlim([0.5, 3.5]);
+
+% ------------------------
+% 4) FINAL TOUCHES
+% ------------------------
+title('Area Under the Notch vs. Notch Impact Strength','FontSize',12,'FontWeight','bold');
+legend([b1, b2], {'Area Under Notch','Notch Impact Strength'}, 'Location','northoutside');
+grid on;  % optional for readability
